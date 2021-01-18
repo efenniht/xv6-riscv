@@ -95,3 +95,18 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+// poweroff
+uint64
+sys_poweroff(void) {
+  int exitcode;
+
+  if (argint(0, &exitcode) < 0)
+    return -1;
+
+  int code = exitcode << 16 | 0x3333;
+  *(volatile int *)FINISHER = code;
+
+  panic("Power off failed");
+}
+
